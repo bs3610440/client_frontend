@@ -7,6 +7,7 @@ import Dashboard from "./Components/Dashboard/Homedashboard.jsx";
  import Footer from "./Components/Footer/Footer.jsx";
 import OtpVerification from "./Components/OtpVerification/Otp.jsx";
 import { CartProvider } from "./Pages/CartContext.jsx"
+import {AuthProvider} from "./Components/context/AllContext.jsx"
 
 import Newarrival from "./Components/Newarrival.jsx";
 import Collection from "./Components/Collection.jsx";
@@ -24,6 +25,7 @@ import Wishlist from "./Pages/Wishlist.jsx";
 export default function App() {
   return (
     <ThemeProvider>
+  <AuthProvider>  
  <CartProvider> 
     <BrowserRouter>
       <Navbar />
@@ -50,6 +52,7 @@ export default function App() {
       <Footer />
     </BrowserRouter>
      </CartProvider>
+      </AuthProvider>
         </ThemeProvider>
 
   );

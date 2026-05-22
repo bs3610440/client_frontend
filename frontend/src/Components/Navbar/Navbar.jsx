@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -12,6 +12,7 @@ import {
   Moon,
 } from "lucide-react";
 import { useTheme } from "../context/Themecontext.jsx";
+import { useAuth } from "../context/AllContext.jsx";
 
 const navigation = [
   { name: "Home", href: "/" },
@@ -23,11 +24,12 @@ const navigation = [
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const { login, setLogIn, Profile, setProfile } = useAuth();
 
   // SEARCH STATES
   const [searchOpen, setSearchOpen] = useState(false);
   const [search, setSearch] = useState("");
+  const searchRef = useRef(null); // ✅ For detecting outside clicks
 
   // PRODUCTS
   const products = [
@@ -39,9 +41,45 @@ export default function Navbar() {
     "Watch",
     "Bag",
     "Tshirt",
+    "Saree",
+    "Lehenga",
+    "Jacket",
+    "Sweater",
   ];
 
   const { darkMode, toggleDarkMode } = useTheme();
+
+  // ✅ Filter suggestions based on search
+  const getSuggestions = () => {
+    if (!search) return [];
+    return products.filter(item =>
+      item.toLowerCase().includes(search.toLowerCase())
+    );
+  };
+
+  // ✅ Handle click outside - close search and reset
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (searchRef.current && !searchRef.current.contains(event.target)) {
+        setSearchOpen(false);
+        setSearch("");
+      }
+    };
+    
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  // Logout function
+  const handleLogout = () => {
+    setLogIn(false);
+    setProfile({});
+    localStorage.removeItem('userToken');
+    localStorage.removeItem('userId');
+    window.location.href = '/';
+  };
+
+  const suggestions = getSuggestions();
 
   return (
     <>
@@ -104,10 +142,18 @@ export default function Navbar() {
 
             {/* Right Side Icons & Auth */}
             <div className="flex items-center gap-2 sm:gap-4">
-              {/* SEARCH SECTION */}
-              <div className="relative">
+              {/* SEARCH SECTION - FIXED */}
+              <div className="relative" ref={searchRef}>
                 <button
-                  onClick={() => setSearchOpen(!searchOpen)}
+                  onClick={() => {
+                    setSearchOpen(!searchOpen);
+                    if (!searchOpen) {
+                      setTimeout(() => {
+                        const input = document.querySelector('.search-input');
+                        if (input) input.focus();
+                      }, 100);
+                    }
+                  }}
                   className={`p-2 rounded-full transition-colors ${
                     darkMode ? "hover:bg-gray-800" : "hover:bg-pink-50"
                   }`}
@@ -120,59 +166,65 @@ export default function Navbar() {
                 </button>
 
                 {searchOpen && (
-                  <div className="absolute right-0 top-12 w-72 z-50">
-                    {/* Input */}
+                  <div className="absolute right-0 top-12 w-80 z-50">
+                    {/* Input - Placeholder gayab on click */}
                     <input
                       type="text"
                       placeholder="Search products..."
                       value={search}
                       onChange={(e) => setSearch(e.target.value)}
-                      className={`w-full px-4 py-2 rounded-xl border outline-none ${
+                      onFocus={(e) => {
+                        e.target.placeholder = "";
+                      }}
+                      onBlur={(e) => {
+                        if (!search) {
+                          e.target.placeholder = "Search products...";
+                        }
+                      }}
+                      className={`search-input w-full px-4 py-2 rounded-xl border outline-none ${
                         darkMode
                           ? "bg-gray-800 text-white border-gray-700"
                           : "bg-white text-black border-gray-300"
                       }`}
+                      autoFocus
                     />
 
                     {/* Suggestions */}
-                    {search && (
+                    {search && suggestions.length > 0 && (
                       <div
                         className={`mt-2 rounded-xl shadow-lg overflow-hidden ${
                           darkMode ? "bg-gray-800" : "bg-white"
                         }`}
                       >
-                        {products.filter((item) =>
-                          item
-                            .toLowerCase()
-                            .includes(search.toLowerCase())
-                        ).length > 0 ? (
-                          products
-                            .filter((item) =>
-                              item
-                                .toLowerCase()
-                                .includes(search.toLowerCase())
-                            )
-                            .map((item, index) => (
-                              <p
-                                key={index}
-                                className={`px-4 py-2 cursor-pointer transition ${
-                                  darkMode
-                                    ? "hover:bg-gray-700 text-white"
-                                    : "hover:bg-pink-50 text-black"
-                                }`}
-                              >
-                                {item}
-                              </p>
-                            ))
-                        ) : (
-                          <p
-                            className={`px-4 py-2 ${
-                              darkMode ? "text-white" : "text-black"
+                        {suggestions.map((item, index) => (
+                          <div
+                            key={index}
+                            className={`px-4 py-2 cursor-pointer transition flex items-center gap-2 ${
+                              darkMode
+                                ? "hover:bg-gray-700 text-white"
+                                : "hover:bg-pink-50 text-black"
                             }`}
+                            onClick={() => {
+                              setSearch(item);
+                              setSearchOpen(false);
+                              setSearch("");
+                            }}
                           >
-                            No Product Found
-                          </p>
-                        )}
+                            <Search className="w-4 h-4 text-gray-400" />
+                            <span>{item}</span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+
+                    {/* No Results */}
+                    {search && suggestions.length === 0 && (
+                      <div
+                        className={`mt-2 rounded-xl shadow-lg p-4 text-center ${
+                          darkMode ? "bg-gray-800 text-white" : "bg-white text-black"
+                        }`}
+                      >
+                        <p className="text-sm">❌ No product found for "{search}"</p>
                       </div>
                     )}
                   </div>
@@ -228,7 +280,7 @@ export default function Navbar() {
               </button>
 
               {/* Auth Buttons */}
-              {!isLoggedIn ? (
+              {!login ? (
                 <div className="hidden sm:flex gap-2">
                   <Link
                     to="/login"
@@ -245,12 +297,41 @@ export default function Navbar() {
                   </Link>
                 </div>
               ) : (
-                <div className="hidden sm:block">
-                  <Link to="/profile">
-                    <div className="w-8 h-8 bg-gradient-to-r from-pink-500 to-orange-500 rounded-full flex items-center justify-center cursor-pointer">
-                      <User className="w-4 h-4 text-white" />
+                <div className="hidden sm:flex items-center gap-2">
+                  <div className="relative group">
+                    <button
+                      className={`flex items-center gap-2 px-3 py-1.5 rounded-lg bg-gradient-to-r from-pink-500 to-orange-500 text-white`}
+                    >
+                      <User className="w-4 h-4" />
+                      <span className="text-sm font-medium">
+                        {Profile?.name?.split(' ')[0] || 'Profile'}
+                      </span>
+                    </button>
+                    {/* Dropdown Menu */}
+                    <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                      <Link
+                        to="/dashboard"
+                        className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-pink-50 dark:hover:bg-gray-700 rounded-t-lg"
+                        onClick={() => setIsOpen(false)}
+                      >
+                        My Profile
+                      </Link>
+                      <Link
+                        to="/orders"
+                        className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-pink-50 dark:hover:bg-gray-700"
+                        onClick={() => setIsOpen(false)}
+                      >
+                        My Orders
+                      </Link>
+                      <hr className="my-1 border-gray-200 dark:border-gray-700" />
+                      <button
+                        onClick={handleLogout}
+                        className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-pink-50 dark:hover:bg-gray-700 rounded-b-lg"
+                      >
+                        Logout
+                      </button>
                     </div>
-                  </Link>
+                  </div>
                 </div>
               )}
 
@@ -305,6 +386,61 @@ export default function Navbar() {
                     {item.name}
                   </Link>
                 ))}
+
+                <div className={`h-px my-2 ${darkMode ? "bg-gray-800" : "bg-gray-100"}`} />
+
+                {!login ? (
+                  <div className="space-y-2 pt-2">
+                    <Link
+                      to="/login"
+                      className="block bg-gradient-to-r from-pink-500 to-pink-600 text-white px-4 py-2 rounded-lg text-center font-medium"
+                      onClick={() => setIsOpen(false)}
+                    >
+                      Login
+                    </Link>
+                    <Link
+                      to="/signup"
+                      className="block border-2 border-orange-500 text-orange-600 px-4 py-2 rounded-lg text-center font-medium hover:bg-orange-500 hover:text-white transition"
+                      onClick={() => setIsOpen(false)}
+                    >
+                      Sign Up
+                    </Link>
+                  </div>
+                ) : (
+                  <div className="space-y-2 pt-2">
+                    <div className="flex items-center gap-3 p-2 bg-pink-50 dark:bg-gray-800 rounded-lg">
+                      <div className="w-10 h-10 bg-gradient-to-r from-pink-500 to-orange-500 rounded-full flex items-center justify-center">
+                        <User className="w-5 h-5 text-white" />
+                      </div>
+                      <div>
+                        <p className={`font-semibold ${darkMode ? "text-white" : "text-gray-800"}`}>
+                          {Profile?.name || 'User'}
+                        </p>
+                        <p className="text-xs text-gray-500">{Profile?.email || ''}</p>
+                      </div>
+                    </div>
+                    <Link
+                      to="/dashboard"
+                      className="block px-4 py-2 rounded-lg text-center font-medium bg-pink-50 text-pink-600"
+                      onClick={() => setIsOpen(false)}
+                    >
+                      My Profile
+                    </Link>
+                    <Link
+                      to="/orders"
+                      className="block px-4 py-2 rounded-lg text-center font-medium text-gray-700"
+                      onClick={() => setIsOpen(false)}
+                    >
+                      My Orders
+                    </Link>
+                    <button
+                      onClick={() => { handleLogout(); setIsOpen(false); }}
+                      className="block w-full px-4 py-2 rounded-lg text-center font-medium text-red-600 border border-red-200"
+                    >
+                      Logout
+                    </button>
+                  </div>
+                )}
               </div>
             </motion.div>
           )}

@@ -387,7 +387,7 @@ export default function HomePage() {
                 transition={{ delay: i * 0.05 }}
                 whileHover={{ y: -8 }}
                 className="relative group cursor-pointer overflow-hidden rounded-2xl shadow-lg"
-                onClick={() => navigate('/collection')}
+                onClick={() => navigate('/collections')}
               >
                 <div className="relative h-48 overflow-hidden">
                   <img 

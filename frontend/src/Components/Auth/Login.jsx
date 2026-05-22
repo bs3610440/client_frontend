@@ -61,7 +61,7 @@ export default function Login() {
             profileImg: response?.data?.img
           });
           setLogIn(true);
-          navigate(`/`);
+          navigate(`/dashboard`);
         }
       } catch (error) {
         if (error?.response?.data?.msg == 'Pls verify otp') {
