@@ -1,16 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import {
-  Menu,
-  X,
-  ShoppingBag,
-  Heart,
-  User,
-  Search,
-  Sun,
-  Moon,
-} from "lucide-react";
+import { Menu, X, ShoppingBag, Heart, User, Search, Sun, Moon,} from "lucide-react";
 import { useTheme } from "../context/Themecontext.jsx";
 import { useAuth } from "../context/AllContext.jsx";
 

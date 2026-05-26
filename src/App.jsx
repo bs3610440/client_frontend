@@ -25,8 +25,8 @@ import Wishlist from "./Pages/Wishlist.jsx";
 export default function App() {
   return (
     <ThemeProvider>
-  <AuthProvider>  
- <CartProvider> 
+    <AuthProvider>  
+    <CartProvider> 
     <BrowserRouter>
       <Navbar />
         <Routes>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useFormik } from "formik";
@@ -20,6 +20,100 @@ import {
 } from "lucide-react";
 
 const localUrl = "http://localhost:8080";
+
+// Right Side Media Component - Only Images and GIFs
+const LoginMedia = () => {
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  const mediaItems = [
+    {
+      type: 'gif',
+      url:'https://i0.wp.com/media3.giphy.com/media/OFuumXqi71xOU/giphy.gif'
+    },
+    {
+      type: 'gif',
+      url: 'https://www.fabhotels.com/blog/wp-content/uploads/2018/06/Feature-Image-Resize_210618_600x400.jpg',
+    },
+    {
+      type: 'image',
+      url: 'https://lemillindia.com/cdn/shop/files/SHOT_10-0012_17cdf33e-0832-4a33-b952-cbafc65a0c2d_1400x.jpg?v=1768302221',
+    },
+    {
+      type: 'gif',
+      url: 'https://imageio.forbes.com/specials-images/imageserve/63ef8848df3e33323a36e6a9/Fast-Fashion--Woman-Shopping-In-Cloth-Store--Shopping-Trendy-Clothes-/960x0.jpg?height=473&width=711&fit=bounds',
+    },
+    {
+      type: 'image',
+      url: 'https://images.picxy.com/cache/2021/6/6/557e149d5263e8c2f36061eaacf559d7.jpg',
+    },
+    {
+      type: 'gif',
+      url:  'https://www.ey.com/adobe/dynamicmedia/deliver/dm-aid--82a93ea1-f2e7-4991-9a83-807225ffa486/ey-com-happy-asian-woman-choosing-clothes-in-glass-store.jpg?preferwebp=true&quality=85',
+    },
+    {
+      type: 'image',
+      url: 'https://thumbs.dreamstime.com/b/clothes-hangers-colorful-clothes-women-shop-summer-sale-73852501.jpg',
+    },
+    {
+      type: 'gif',
+      url: 'https://media.istockphoto.com/id/1345105952/photo/customers-shopping-in-modern-clothing-store-retail-sales-associate-assists-client-diverse.jpg?s=612x612&w=0&k=20&c=9RLgZLg03tKTx4VGzimKBQksCdFDXD8h1r9HZRgEqD4=',
+    }
+  ];
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % mediaItems.length);
+    }, 3500);
+    return () => clearInterval(interval);
+  }, []);
+
+  const currentMedia = mediaItems[currentIndex];
+
+  return (
+    <div className="flex items-center justify-center h-full w-full p-6">
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.6 }}
+        className="relative w-full rounded-2xl overflow-hidden shadow-2xl"
+      >
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={currentIndex}
+            initial={{ opacity: 0, scale: 1.1 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            transition={{ duration: 0.5 }}
+            className="relative"
+          >
+            <img
+              src={currentMedia.url}
+              alt="Shopping"
+              className="w-full h-[500px] object-cover"
+              loading="eager"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/20 to-transparent" />
+          </motion.div>
+        </AnimatePresence>
+
+        {/* Slider Dots */}
+        <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex gap-2 z-10">
+          {mediaItems.map((_, idx) => (
+            <button
+              key={idx}
+              onClick={() => setCurrentIndex(idx)}
+              className={`transition-all duration-300 rounded-full ${
+                idx === currentIndex 
+                  ? 'w-8 h-1.5 bg-white' 
+                  : 'w-1.5 h-1.5 bg-white/50 hover:bg-white/80'
+              }`}
+            />
+          ))}
+        </div>
+      </motion.div>
+    </div>
+  );
+};
 
 // Custom Google Icon
 const GoogleIcon = ({ className = "w-5 h-5" }) => (
@@ -87,196 +181,206 @@ export default function Login() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-pink-50 via-white to-orange-50 p-4">
       
-      {/* Main Card */}
-      <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="w-full max-w-md"
-      >
-        <div className="bg-white rounded-2xl shadow-2xl overflow-hidden">
-          
-          {/* Decorative Top Bar */}
-          <div className="h-2 bg-gradient-to-r from-pink-500 via-pink-400 to-orange-500"></div>
-          
-          {/* Header */}
-          <div className="px-8 pt-8 pb-4 text-center">
-            <motion.div
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              transition={{ delay: 0.2, type: "spring" }}
-              className="w-20 h-20 bg-gradient-to-r from-pink-500 to-orange-500 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg"
-            >
-              <LogIn className="w-10 h-10 text-white" />
-            </motion.div>
-            <h2 className="text-3xl font-bold text-gray-800">Welcome Back! 👋</h2>
-            <p className="text-gray-500 text-sm mt-2">Login to continue shopping</p>
-          </div>
-
-          {/* Form Body */}
-          <div className="px-8 pb-8">
-            <form onSubmit={formik.handleSubmit} className="space-y-5">
-
-              {/* Email Field */}
-              <motion.div
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.1 }}
-                className="space-y-1"
-              >
-                <label className="block text-sm font-semibold text-gray-700">
-                  Email Address
-                </label>
-                <div className="relative group">
-                  <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 group-focus-within:text-pink-500 transition-colors" />
-                  <input
-                    type="email"
-                    {...formik.getFieldProps("email")}
-                    onFocus={() => setFocusedField("email")}
-                    onBlur={() => setFocusedField(null)}
-                    placeholder="hello@example.com"
-                    className={`w-full pl-11 pr-4 py-3 bg-gray-50 border-2 rounded-xl text-gray-800 placeholder-gray-400 focus:outline-none focus:bg-white transition-all duration-200
-                      ${focusedField === "email" 
-                        ? 'border-pink-500 shadow-md' 
-                        : 'border-gray-200 hover:border-gray-300'
-                      }`}
-                  />
-                </div>
-                {formik.touched.email && formik.errors.email && (
-                  <motion.p
-                    initial={{ opacity: 0, y: -5 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="text-pink-500 text-xs mt-1 flex items-center gap-1"
-                  >
-                    <span>⚠️</span> {formik.errors.email}
-                  </motion.p>
-                )}
-              </motion.div>
-
-              {/* Password Field */}
-              <motion.div
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.2 }}
-                className="space-y-1"
-              >
-                <label className="block text-sm font-semibold text-gray-700">
-                  Password
-                </label>
-                <div className="relative group">
-                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 group-focus-within:text-pink-500 transition-colors" />
-                  <input
-                    type={showPassword ? "text" : "password"}
-                    {...formik.getFieldProps("password")}
-                    onFocus={() => setFocusedField("password")}
-                    onBlur={() => setFocusedField(null)}
-                    placeholder="Enter your password"
-                    className={`w-full pl-11 pr-12 py-3 bg-gray-50 border-2 rounded-xl text-gray-800 placeholder-gray-400 focus:outline-none focus:bg-white transition-all duration-200
-                      ${focusedField === "password" 
-                        ? 'border-pink-500 shadow-md' 
-                        : 'border-gray-200 hover:border-gray-300'
-                      }`}
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-pink-500 transition-colors"
-                  >
-                    {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-                  </button>
-                </div>
-                {formik.touched.password && formik.errors.password && (
-                  <motion.p
-                    initial={{ opacity: 0, y: -5 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="text-pink-500 text-xs mt-1 flex items-center gap-1"
-                  >
-                    <span>⚠️</span> {formik.errors.password}
-                  </motion.p>
-                )}
-              </motion.div>
-
-              {/* Options Row */}
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.3 }}
-                className="flex items-center justify-between text-sm"
-              >
-                <label className="flex items-center gap-2 cursor-pointer group">
-                  <input
-                    type="checkbox"
-                    onChange={() => setShowPassword(!showPassword)}
-                    className="w-4 h-4 rounded border-gray-300 text-pink-500 focus:ring-pink-500 cursor-pointer"
-                  />
-                  <span className="text-gray-600 group-hover:text-gray-800 transition">
-                    Show password
-                  </span>
-                </label>
-
-                <Link
-                  to="/forgot-password"
-                  className="text-pink-600 hover:text-pink-700 font-semibold transition hover:underline"
+      {/* Main Container - Two Column Layout */}
+      <div className="w-full max-w-5xl">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="bg-white rounded-2xl shadow-2xl overflow-hidden"
+        >
+          <div className="flex flex-col lg:flex-row">
+            
+            {/* Left Side - Login Form */}
+            <div className="lg:w-1/2">
+              {/* Decorative Top Bar */}
+              <div className="h-2 bg-gradient-to-r from-pink-500 via-pink-400 to-orange-500"></div>
+              
+              {/* Header */}
+              <div className="px-8 pt-8 pb-4 text-center">
+                <motion.div
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  transition={{ delay: 0.2, type: "spring" }}
+                  className="w-20 h-20 bg-gradient-to-r from-pink-500 to-orange-500 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg"
                 >
-                  Forgot Password?
-                </Link>
-              </motion.div>
-
-              {/* Login Button */}
-              <motion.button
-                type="submit"
-                disabled={isSubmitting}
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                className={`w-full bg-gradient-to-r from-pink-600 to-orange-500 text-white py-3.5 rounded-xl font-semibold mt-6 transition-all shadow-lg hover:shadow-xl flex items-center justify-center gap-2 ${
-                  isSubmitting ? 'opacity-70 cursor-not-allowed' : 'hover:shadow-pink-200'
-                }`}
-              >
-                {isSubmitting ? (
-                  <>
-                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                    Logging in...
-                  </>
-                ) : (
-                  <>
-                    Login
-                    <ArrowRight className="w-5 h-5" />
-                  </>
-                )}
-              </motion.button>
-
-              {/* Divider */}
-              <div className="relative my-6">
-                <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-gray-200"></div>
-                </div>
-                <div className="relative flex justify-center text-sm">
-                  <span className="px-4 bg-white text-gray-500">Or continue with</span>
-                </div>
+                  <LogIn className="w-10 h-10 text-white" />
+                </motion.div>
+                <h2 className="text-3xl font-bold text-gray-800">Welcome Back! 👋</h2>
+                <p className="text-gray-500 text-sm mt-2">Login to continue shopping</p>
               </div>
 
-              {/* Google Login Button */}
-              <motion.button
-                type="button"
-                onClick={handleGoogleLogin}
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                className="w-full bg-white border-2 border-gray-200 text-gray-700 py-3 rounded-xl font-semibold hover:bg-gray-50 hover:border-pink-200 transition-all flex items-center justify-center gap-3 group"
-              >
-                <GoogleIcon className="w-5 h-5 group-hover:scale-110 transition-transform" />
-                Continue with Google
-              </motion.button>
+              {/* Form Body */}
+              <div className="px-8 pb-8">
+                <form onSubmit={formik.handleSubmit} className="space-y-5">
 
-              {/* Signup Link */}
-              <p className="text-center text-gray-600 text-sm mt-6">
-                Don't have an account?{" "}
-                <Link to="/signup" className="text-pink-600 hover:text-pink-700 font-semibold transition hover:underline">
-                  Create Account
-                </Link>
-              </p>
-            </form>
+                  {/* Email Field */}
+                  <motion.div
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.1 }}
+                    className="space-y-1"
+                  >
+                    <label className="block text-sm font-semibold text-gray-700">
+                      Email Address
+                    </label>
+                    <div className="relative group">
+                      <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 group-focus-within:text-pink-500 transition-colors" />
+                      <input
+                        type="email"
+                        {...formik.getFieldProps("email")}
+                        onFocus={() => setFocusedField("email")}
+                        onBlur={() => setFocusedField(null)}
+                        placeholder="hello@example.com"
+                        className={`w-full pl-11 pr-4 py-3 bg-gray-50 border-2 rounded-xl text-gray-800 placeholder-gray-400 focus:outline-none focus:bg-white transition-all duration-200
+                          ${focusedField === "email" 
+                            ? 'border-pink-500 shadow-md' 
+                            : 'border-gray-200 hover:border-gray-300'
+                          }`}
+                      />
+                    </div>
+                    {formik.touched.email && formik.errors.email && (
+                      <motion.p
+                        initial={{ opacity: 0, y: -5 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="text-pink-500 text-xs mt-1 flex items-center gap-1"
+                      >
+                        <span>⚠️</span> {formik.errors.email}
+                      </motion.p>
+                    )}
+                  </motion.div>
+
+                  {/* Password Field */}
+                  <motion.div
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.2 }}
+                    className="space-y-1"
+                  >
+                    <label className="block text-sm font-semibold text-gray-700">
+                      Password
+                    </label>
+                    <div className="relative group">
+                      <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 group-focus-within:text-pink-500 transition-colors" />
+                      <input
+                        type={showPassword ? "text" : "password"}
+                        {...formik.getFieldProps("password")}
+                        onFocus={() => setFocusedField("password")}
+                        onBlur={() => setFocusedField(null)}
+                        placeholder="Enter your password"
+                        className={`w-full pl-11 pr-12 py-3 bg-gray-50 border-2 rounded-xl text-gray-800 placeholder-gray-400 focus:outline-none focus:bg-white transition-all duration-200
+                          ${focusedField === "password" 
+                            ? 'border-pink-500 shadow-md' 
+                            : 'border-gray-200 hover:border-gray-300'
+                          }`}
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-pink-500 transition-colors"
+                      >
+                        {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                      </button>
+                    </div>
+                    {formik.touched.password && formik.errors.password && (
+                      <motion.p
+                        initial={{ opacity: 0, y: -5 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="text-pink-500 text-xs mt-1 flex items-center gap-1"
+                      >
+                        <span>⚠️</span> {formik.errors.password}
+                      </motion.p>
+                    )}
+                  </motion.div>
+
+                  {/* Options Row */}
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.3 }}
+                    className="flex items-center justify-between text-sm"
+                  >
+                    <label className="flex items-center gap-2 cursor-pointer group">
+                      <input
+                        type="checkbox"
+                        onChange={() => setShowPassword(!showPassword)}
+                        className="w-4 h-4 rounded border-gray-300 text-pink-500 focus:ring-pink-500 cursor-pointer"
+                      />
+                      <span className="text-gray-600 group-hover:text-gray-800 transition">
+                        Show password
+                      </span>
+                    </label>
+
+                    <Link
+                      to="/forgot-password"
+                      className="text-pink-600 hover:text-pink-700 font-semibold transition hover:underline"
+                    >
+                      Forgot Password?
+                    </Link>
+                  </motion.div>
+
+                  {/* Login Button */}
+                  <motion.button
+                    type="submit"
+                    disabled={isSubmitting}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    className={`w-full bg-gradient-to-r from-pink-600 to-orange-500 text-white py-3.5 rounded-xl font-semibold mt-6 transition-all shadow-lg hover:shadow-xl flex items-center justify-center gap-2 ${
+                      isSubmitting ? 'opacity-70 cursor-not-allowed' : 'hover:shadow-pink-200'
+                    }`}
+                  >
+                    {isSubmitting ? (
+                      <>
+                        <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                        Logging in...
+                      </>
+                    ) : (
+                      <>
+                        Login
+                        <ArrowRight className="w-5 h-5" />
+                      </>
+                    )}
+                  </motion.button>
+
+                  {/* Divider */}
+                  <div className="relative my-6">
+                    <div className="absolute inset-0 flex items-center">
+                      <div className="w-full border-t border-gray-200"></div>
+                    </div>
+                    <div className="relative flex justify-center text-sm">
+                      <span className="px-4 bg-white text-gray-500">Or continue with</span>
+                    </div>
+                  </div>
+
+                  {/* Google Login Button */}
+                  <motion.button
+                    type="button"
+                    onClick={handleGoogleLogin}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    className="w-full bg-white border-2 border-gray-200 text-gray-700 py-3 rounded-xl font-semibold hover:bg-gray-50 hover:border-pink-200 transition-all flex items-center justify-center gap-3 group"
+                  >
+                    <GoogleIcon className="w-5 h-5 group-hover:scale-110 transition-transform" />
+                    Continue with Google
+                  </motion.button>
+
+                  {/* Signup Link */}
+                  <p className="text-center text-gray-600 text-sm mt-6">
+                    Don't have an account?{" "}
+                    <Link to="/signup" className="text-pink-600 hover:text-pink-700 font-semibold transition hover:underline">
+                      Create Account
+                    </Link>
+                  </p>
+                </form>
+              </div>
+            </div>
+
+            {/* Right Side - Only Images/GIFs */}
+            <div className="lg:w-1/2 bg-gradient-to-br from-pink-50 to-orange-50">
+              <LoginMedia />
+            </div>
           </div>
-        </div>
+        </motion.div>
 
         {/* Features Footer */}
         <motion.div
@@ -295,7 +399,7 @@ export default function Login() {
             <TrendingUp className="w-3 h-3 text-purple-500" /> Fast Support
           </span>
         </motion.div>
-      </motion.div>
+      </div>
     </div>
   );
 }
