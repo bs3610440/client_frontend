@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
+import { useTheme } from "../Components/context/Themecontext.jsx";
 import { 
   ShoppingCart, 
   Heart, 
@@ -196,10 +197,15 @@ const featuredProducts = [
 
 export default function Collection() {
   const [hoveredCard, setHoveredCard] = useState(null);
-
+  const { darkMode } = useTheme();
   return (
-    <div className="min-h-screen bg-gradient-to-br from-pink-50 via-white to-orange-50">
-      
+<div
+  className={`min-h-screen transition-all duration-300 ${
+    darkMode
+      ? "bg-gray-900 text-white"
+      : "bg-gradient-to-br from-pink-50 via-white to-orange-50"
+  }`}
+>      
       {/* Hero Section */}
       <div className="relative bg-gradient-to-r from-pink-600 to-orange-500 py-16 md:py-24 overflow-hidden">
         <div className="absolute inset-0 bg-black/10"></div>
@@ -238,8 +244,9 @@ export default function Collection() {
               whileHover={{ y: -8 }}
               onMouseEnter={() => setHoveredCard(collection.id)}
               onMouseLeave={() => setHoveredCard(null)}
-              className="group relative bg-white rounded-2xl shadow-lg overflow-hidden cursor-pointer"
-            >
+className={`group relative rounded-2xl shadow-lg overflow-hidden cursor-pointer ${
+  darkMode ? "bg-gray-800" : "bg-white"
+}`}            >
               {/* Image */}
               <div className="relative h-64 overflow-hidden">
                 <img 
@@ -262,8 +269,9 @@ export default function Collection() {
               
               {/* Content */}
               <div className="p-5">
-                <h3 className="text-xl font-bold text-gray-800 mb-1">{collection.name}</h3>
-                <p className="text-gray-500 text-sm mb-3">{collection.description}</p>
+             <h3 className="text-xl font-bold text-gray-800 mb-1">{collection.name}</h3>
+             <p className={`text-sm mb-3 ${
+              darkMode ? "text-gray-300" : "text-gray-500" }`}>{collection.description}</p>
                 
                 <div className="flex items-center justify-between">
                   <div>
@@ -312,13 +320,17 @@ export default function Collection() {
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: index * 0.1 }}
                 whileHover={{ y: -5 }}
-                className="bg-white rounded-xl overflow-hidden shadow-lg"
-              >
+                className={`rounded-xl overflow-hidden shadow-lg ${
+                darkMode ? "bg-gray-800" : "bg-white"}`} >
+
                 <div className="relative h-48 overflow-hidden">
                   <img src={product.img} alt={product.name} className="w-full h-full object-cover hover:scale-110 transition duration-500" />
                 </div>
                 <div className="p-3">
-                  <h3 className="font-semibold text-gray-800 text-sm mb-1">{product.name}</h3>
+                <h3 className={`font-semibold text-sm mb-1 ${
+                   darkMode ? "text-white" : "text-gray-800"}`}>{product.name}</h3>
+
+
                   <div className="flex items-center gap-2 mb-2">
                     <span className="text-lg font-bold text-pink-600">{product.price}</span>
                     <span className="text-xs text-gray-400 line-through">{product.originalPrice}</span>
@@ -340,33 +352,56 @@ export default function Collection() {
       {/* Why Choose Us */}
       <div className="max-w-7xl mx-auto px-4 py-12">
         <div className="text-center mb-10">
-          <h2 className="text-3xl font-bold text-gray-800 mb-2">Why Choose Our Collections?</h2>
-          <p className="text-gray-500">We bring you the best quality with affordable prices</p>
+       <h2 className={`text-3xl font-bold mb-2 ${
+       darkMode ? "text-white" : "text-gray-800" }`}
+>          
+          Why Choose Our Collections?</h2>
+          <p className={darkMode ? "text-gray-300" : "text-gray-500"}>            
+            We bring you the best quality with affordable prices</p>
         </div>
         
         <div className="grid md:grid-cols-3 gap-8">
-          <motion.div whileHover={{ y: -5 }} className="text-center p-6 bg-white rounded-2xl shadow-lg">
+          <motion.div whileHover={{ y: -5 }}
+          
+          className={`text-center p-6 rounded-2xl shadow-lg ${
+           darkMode ? "bg-gray-800" : "bg-white"}`}> 
             <div className="w-16 h-16 bg-pink-100 rounded-full flex items-center justify-center mx-auto mb-4">
               <Award className="w-8 h-8 text-pink-600" />
             </div>
-            <h3 className="font-bold text-gray-800 mb-2">Premium Quality</h3>
+            <h3 className={`text-3xl font-bold mb-2 ${
+            darkMode ? "text-white" : "text-gray-800" }`}>              
+              Premium Quality</h3>
             <p className="text-gray-500 text-sm">Handpicked products with best quality materials</p>
           </motion.div>
           
-          <motion.div whileHover={{ y: -5 }} className="text-center p-6 bg-white rounded-2xl shadow-lg">
-            <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <TrendingUp className="w-8 h-8 text-orange-600" />
+<motion.div whileHover={{ y: -5 }}
+  className={`text-center p-6 rounded-2xl shadow-lg ${
+     darkMode ? "bg-gray-800" : "bg-white" }`}>      
+           <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
+           <TrendingUp className="w-8 h-8 text-orange-600" />
             </div>
-            <h3 className="font-bold text-gray-800 mb-2">Trending Styles</h3>
-            <p className="text-gray-500 text-sm">Latest fashion trends updated regularly</p>
+           <h3 className={`font-bold mb-2 ${
+           darkMode ? "text-white" : "text-gray-800" }`}
+>                  Trending Styles</h3>
+<p className={`text-sm ${
+    darkMode ? "text-gray-300" : "text-gray-500"
+  }`}
+>              
+              Latest fashion trends updated regularly</p>
           </motion.div>
           
-          <motion.div whileHover={{ y: -5 }} className="text-center p-6 bg-white rounded-2xl shadow-lg">
-            <div className="w-16 h-16 bg-pink-100 rounded-full flex items-center justify-center mx-auto mb-4">
+<motion.div
+  whileHover={{ y: -5 }}
+  className={`text-center p-6 rounded-2xl shadow-lg ${
+    darkMode ? "bg-gray-800" : "bg-white"}`}>         
+       <div className="w-16 h-16 bg-pink-100 rounded-full flex items-center justify-center mx-auto mb-4">
               <Clock className="w-8 h-8 text-pink-600" />
             </div>
-            <h3 className="font-bold text-gray-800 mb-2">Fast Delivery</h3>
-            <p className="text-gray-500 text-sm">Free shipping on orders above ₹999</p>
+<p className={`text-sm ${darkMode ? "text-gray-300" : "text-gray-500"}`}>              
+              Fast Delivery</p>
+<p
+  className={`text-sm ${ darkMode ? "text-gray-300" : "text-gray-500" }`}>              
+              Free shipping on orders above ₹999</p>
           </motion.div>
         </div>
       </div>

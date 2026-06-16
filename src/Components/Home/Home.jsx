@@ -203,6 +203,7 @@ const testimonials = [
 ];
 
 export default function HomePage() {
+  const { darkMode } = useTheme();
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
@@ -222,10 +223,14 @@ export default function HomePage() {
   const prevSlide = () => {
     setCurrentSlide((prev) => (prev - 1 + heroSlides.length) % heroSlides.length);
   };
-
-  return (
-    <div className="bg-gradient-to-br from-pink-50 via-white to-orange-50">
-      
+return (
+  <div
+    className={`min-h-screen transition-all duration-300 ${
+      darkMode
+        ? "bg-gray-900 text-white"
+        : "bg-gradient-to-br from-pink-50 via-white to-orange-50 text-black"
+    }`}
+  >
       {/* Top Bar */}
       <div className="bg-gradient-to-r from-pink-600 to-orange-500 text-white text-sm py-2">
         <div className="max-w-7xl mx-auto px-4 flex justify-between items-center">
@@ -342,8 +347,11 @@ export default function HomePage() {
       </section>
 
       {/* Features Section */}
-      <section className="py-16 bg-white">
-        <div className="max-w-7xl mx-auto px-4">
+<section
+  className={`py-16 ${
+    darkMode ? "bg-gray-800" : "bg-white"
+  }`}
+>        <div className="max-w-7xl mx-auto px-4">
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
             {features.map((feature, index) => (
               <motion.div
@@ -444,8 +452,11 @@ export default function HomePage() {
       </section>
 
       {/* Trending Products */}
-      <section className="py-16 bg-white">
-        <div className="max-w-7xl mx-auto px-4">
+<section
+  className={`py-16 ${
+    darkMode ? "bg-gray-900" : "bg-white"
+  }`}
+>        <div className="max-w-7xl mx-auto px-4">
           <div className="flex justify-between items-center mb-12">
             <div>
               <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-2">Trending Products 🔥</h2>
@@ -466,8 +477,11 @@ export default function HomePage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
                 whileHover={{ y: -10 }}
-                className="group bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all"
-              >
+className={`group rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all ${
+  darkMode
+    ? "bg-gray-800 text-white"
+    : "bg-white"
+}`}              >
                 <div className="relative overflow-hidden">
                   <img
                     src={item.img}
@@ -557,8 +571,11 @@ export default function HomePage() {
       </section>
 
       {/* Newsletter */}
-      <section className="py-16 bg-white">
-        <div className="max-w-4xl mx-auto px-4 text-center">
+<section
+  className={`py-16 ${
+    darkMode ? "bg-gray-800" : "bg-white"
+  }`}
+>        <div className="max-w-4xl mx-auto px-4 text-center">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}

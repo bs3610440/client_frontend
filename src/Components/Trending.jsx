@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
+import { useTheme } from "../Components/context/Themecontext";
 import { 
   ShoppingCart, 
   Heart, 
@@ -199,6 +200,7 @@ const bannerImages = [
 ];
 
 export default function Trending() {
+  const { darkMode } = useTheme();
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [isGridView, setIsGridView] = useState(true);
   const [currentBanner, setCurrentBanner] = useState(0);
@@ -229,8 +231,13 @@ export default function Trending() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-pink-50 via-white to-orange-50">
-      
+<div
+  className={`min-h-screen transition-all duration-300 ${
+    darkMode
+      ? "bg-gray-900 text-white"
+      : "bg-gradient-to-br from-pink-50 via-white to-orange-50"
+  }`}
+>      
       {/* Trending Hero Banner */}
       <div className="relative h-[60vh] md:h-[70vh] overflow-hidden">
         <motion.div
@@ -332,8 +339,11 @@ export default function Trending() {
             <div className="relative">
               <button
                 onClick={() => setShowFilter(!showFilter)}
-                className="flex items-center gap-1 px-3 py-1.5 bg-white border border-gray-200 rounded-lg text-gray-700 text-sm"
-              >
+className={`flex items-center gap-1 px-3 py-1.5 rounded-lg text-sm ${
+  darkMode
+    ? "bg-gray-800 border border-gray-700 text-white"
+    : "bg-white border border-gray-200 text-gray-700"
+}`}              >
                 <Filter className="w-3 h-3" />
                 <span>Sort</span>
                 <ChevronDown className="w-3 h-3" />
@@ -379,8 +389,11 @@ export default function Trending() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.05 }}
               whileHover={{ y: -5 }}
-              className="group bg-white rounded-xl shadow-lg hover:shadow-2xl transition-all overflow-hidden"
-            >
+className={`group rounded-xl shadow-lg hover:shadow-2xl transition-all overflow-hidden ${
+  darkMode
+    ? "bg-gray-800"
+    : "bg-white"
+}`}            >
               <div className="relative overflow-hidden">
                 <img src={product.img} alt={product.name} className="w-full h-48 sm:h-56 object-cover group-hover:scale-110 transition-transform duration-500" />
                 <span className="absolute top-2 left-2 bg-gradient-to-r from-pink-600 to-orange-500 text-white text-[10px] px-2 py-0.5 rounded-full flex items-center gap-1">
@@ -397,7 +410,12 @@ export default function Trending() {
               </div>
               <div className="p-3">
                 <p className="text-[10px] text-pink-500 font-semibold">{product.category}</p>
-                <h3 className="font-semibold text-gray-800 text-sm mb-1 line-clamp-2">{product.name}</h3>
+<h3
+  className={`font-semibold text-sm mb-1 line-clamp-2 ${
+    darkMode ? "text-white" : "text-gray-800"
+  }`}
+>                  
+                  {product.name}</h3>
                 <div className="flex items-center gap-1 mb-1">
                   <div className="flex text-yellow-400">
                     {[...Array(5)].map((_, i) => (<Star key={i} className={`w-3 h-3 ${i < Math.floor(product.rating) ? 'fill-current' : ''}`} />))}
@@ -408,7 +426,13 @@ export default function Trending() {
                   <span className="text-base font-bold text-pink-600">{product.price}</span>
                   <span className="text-[10px] text-gray-400 line-through">{product.originalPrice}</span>
                 </div>
-                <p className="text-[10px] text-gray-500 mb-2">📦 {product.soldCount}</p>
+<p
+  className={`text-[10px] mb-2 ${
+    darkMode ? "text-gray-400" : "text-gray-500"
+  }`}
+>                  
+                  
+                  📦 {product.soldCount}</p>
                 <button className="w-full bg-gradient-to-r from-pink-600 to-orange-500 text-white py-1.5 rounded-lg text-xs font-semibold hover:shadow-lg transition">Quick Shop</button>
               </div>
             </motion.div>

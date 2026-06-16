@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+ import { useTheme } from "../Components/context/Themecontext.jsx";
 import { 
   ShoppingCart, 
   Heart, 
@@ -223,10 +224,12 @@ const categories = ["All", "Dresses", "Ethnic", "Accessories", "Jackets", "Botto
 const priceRanges = ["All", "Under ₹500", "₹500-₹1000", "₹1000-₹2000", "Above ₹2000"];
 
 export default function Sale() {
-  const [selectedCategory, setSelectedCategory] = useState("All");
-  const [selectedPrice, setSelectedPrice] = useState("All");
-  const [timeLeft, setTimeLeft] = useState({ days: 2, hours: 23, minutes: 59, seconds: 59 });
+  const { darkMode } = useTheme();
   const [showFilters, setShowFilters] = useState(false);
+ const [selectedCategory, setSelectedCategory] = useState("All");
+const [selectedPrice, setSelectedPrice] = useState("All");
+const [timeLeft, setTimeLeft] = useState({days: 2,hours: 23,minutes: 59,seconds: 59
+});
   const [savedItems, setSavedItems] = useState([]);
   const [currentHeroIndex, setCurrentHeroIndex] = useState(0);
 
@@ -261,7 +264,8 @@ export default function Sale() {
 
   const filteredProducts = saleProducts.filter(p => {
     if (selectedCategory !== "All" && p.category !== selectedCategory) return false;
-    if (selectedPrice !== "All") {
+    if (selectedPrice !== "All")
+       {
       const price = parseInt(p.price.replace('₹', ''));
       if (selectedPrice === "Under ₹500" && price >= 500) return false;
       if (selectedPrice === "₹500-₹1000" && (price < 500 || price > 1000)) return false;
@@ -278,8 +282,13 @@ export default function Sale() {
   }, 0);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-red-50 via-orange-50 to-yellow-50">
-      
+<div
+  className={`min-h-screen transition-colors duration-300 ${
+    darkMode
+      ? "bg-gray-900 text-white"
+      : "bg-gradient-to-br from-red-50 via-orange-50 to-yellow-50 text-black"
+  }`}
+>  
       {/* Hero Section with Animated Background Images */}
       <div className="relative h-[70vh] md:h-[80vh] overflow-hidden">
         {/* Animated Background Images */}
@@ -402,23 +411,48 @@ export default function Sale() {
       <div className="bg-white shadow-md py-4 sticky top-0 z-10">
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex flex-wrap justify-center gap-6">
-            <div className="flex items-center gap-2 text-gray-700">
+            <div
+className={`flex items-center gap-2 px-4 py-2 rounded-lg shadow-md ${
+  darkMode
+    ? "bg-gray-800 text-white"
+    : "bg-white text-gray-700"
+}`}             >
               <Truck className="w-5 h-5 text-red-500" />
               <span className="text-sm">Free Shipping on ₹999+</span>
             </div>
-            <div className="flex items-center gap-2 text-gray-700">
+            <div
+className={`flex items-center gap-2 px-4 py-2 rounded-lg shadow-md ${
+  darkMode
+    ? "bg-gray-800 text-white"
+    : "bg-white text-gray-700"
+}`}            >
               <Gift className="w-5 h-5 text-red-500" />
               <span className="text-sm">Free Gift on ₹1999+</span>
             </div>
-            <div className="flex items-center gap-2 text-gray-700">
+            <div
+className={`flex items-center gap-2 px-4 py-2 rounded-lg shadow-md ${
+  darkMode
+    ? "bg-gray-800 text-white"
+    : "bg-white text-gray-700"
+}`}            >
               <Shield className="w-5 h-5 text-red-500" />
               <span className="text-sm">30-Day Returns</span>
             </div>
-            <div className="flex items-center gap-2 text-gray-700">
+            <div
+className={`flex items-center gap-2 px-4 py-2 rounded-lg shadow-md ${
+  darkMode
+    ? "bg-gray-800 text-white"
+    : "bg-white text-gray-700"
+}`}            >
               <Zap className="w-5 h-5 text-red-500" />
               <span className="text-sm">Express Delivery</span>
             </div>
-            <div className="flex items-center gap-2 text-gray-700">
+            <div
+className={`flex items-center gap-2 px-4 py-2 rounded-lg shadow-md ${
+  darkMode
+    ? "bg-gray-800 text-white"
+    : "bg-white text-gray-700"
+}`}            >
               <CreditCard className="w-5 h-5 text-red-500" />
               <span className="text-sm">COD Available</span>
             </div>
@@ -504,8 +538,11 @@ export default function Sale() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.05 }}
               whileHover={{ y: -8 }}
-              className="group bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden relative"
-            >
+className={`group rounded-2xl shadow-lg ${
+  darkMode
+    ? "bg-gray-800 text-white"
+    : "bg-white text-black"
+}`}            >
               {/* Wishlist Button */}
               <button
                 onClick={() => toggleSaveItem(product.id)}
@@ -618,7 +655,11 @@ export default function Sale() {
       {/* Flash Sale Tips */}
       <div className="max-w-7xl mx-auto px-4 py-12">
         <div className="grid md:grid-cols-3 gap-6">
-          <div className="bg-white rounded-xl p-5 shadow-md">
+           <div
+  className={`rounded-xl shadow-lg p-4 ${
+    darkMode ? "bg-gray-800 text-white" : "bg-white"
+  }`}
+>
             <div className="flex items-center gap-3 mb-3">
               <div className="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center">
                 <Clock className="w-5 h-5 text-red-500" />
@@ -627,8 +668,11 @@ export default function Sale() {
             </div>
             <p className="text-gray-600 text-sm">Grab your favorites before they're gone! Stock is limited.</p>
           </div>
-          <div className="bg-white rounded-xl p-5 shadow-md">
-            <div className="flex items-center gap-3 mb-3">
+<div
+  className={`rounded-xl shadow-lg p-4 ${
+    darkMode ? "bg-gray-800 text-white" : "bg-white"
+  }`}
+>            <div className="flex items-center gap-3 mb-3">
               <div className="w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center">
                 <Package className="w-5 h-5 text-orange-500" />
               </div>
@@ -636,8 +680,11 @@ export default function Sale() {
             </div>
             <p className="text-gray-600 text-sm">Enjoy free shipping on orders above ₹999. No hidden charges!</p>
           </div>
-          <div className="bg-white rounded-xl p-5 shadow-md">
-            <div className="flex items-center gap-3 mb-3">
+<div
+  className={`rounded-xl shadow-lg p-4 ${
+    darkMode ? "bg-gray-800 text-white" : "bg-white"
+  }`}
+>            <div className="flex items-center gap-3 mb-3">
               <div className="w-10 h-10 bg-yellow-100 rounded-full flex items-center justify-center">
                 <Coffee className="w-5 h-5 text-yellow-600" />
               </div>
@@ -665,19 +712,3 @@ export default function Sale() {
   );
 }
 
-// Add this CSS for slow spin animation (add to your global CSS or tailwind config)
-const style = document.createElement('style');
-style.textContent = `
-  @keyframes spin-slow {
-    from {
-      transform: rotate(0deg);
-    }
-    to {
-      transform: rotate(360deg);
-    }
-  }
-  .animate-spin-slow {
-    animation: spin-slow 8s linear infinite;
-  }
-`;
-document.head.appendChild(style);

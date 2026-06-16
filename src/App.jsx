@@ -8,13 +8,10 @@ import Dashboard from "./Components/Dashboard/Homedashboard.jsx";
 import OtpVerification from "./Components/OtpVerification/Otp.jsx";
 import { CartProvider } from "./Pages/CartContext.jsx"
 import {AuthProvider} from "./Components/context/AllContext.jsx"
-
 import Newarrival from "./Components/Newarrival.jsx";
 import Collection from "./Components/Collection.jsx";
 import Trending from "./Components/Trending.jsx";
 import Sale from "./Components/Sale.jsx";
-
-
 import { ThemeProvider } from "./Components/context/Themecontext.jsx"
 import SearchResults from "./Components/Search/SearchBar.jsx";
 import Cart from "./Pages/Cart.jsx";

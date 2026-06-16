@@ -5,7 +5,7 @@ import { useFormik } from "formik";
 import { motion, AnimatePresence } from "framer-motion";
 import { validationLoginSchema } from "../Validation/AllValidation";
 import { showErrorToast, showSuccessToast } from "../Notification/ToastNofication";
-import { useAuth } from "../context/AllContext";
+// import { useTheme} from "../context/Themecontext.jsx";
 import { 
   Mail, 
   Lock, 
@@ -130,7 +130,7 @@ export default function Login() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [focusedField, setFocusedField] = useState(null);
 
-  const { setLogIn, setProfile } = useAuth();
+  // const { setLogIn, setProfile } = useAuth();
   const navigate = useNavigate();
 
   const formik = useFormik({
