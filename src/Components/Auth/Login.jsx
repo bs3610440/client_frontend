@@ -5,7 +5,7 @@ import { useFormik } from "formik";
 import { motion, AnimatePresence } from "framer-motion";
 import { validationLoginSchema } from "../Validation/AllValidation";
 import { showErrorToast, showSuccessToast } from "../Notification/ToastNofication";
-// import { useTheme} from "../context/Themecontext.jsx";
+ import { useTheme} from "../context/Themecontext.jsx";
 import { 
   Mail, 
   Lock, 
@@ -21,10 +21,8 @@ import {
 
 const localUrl = "http://localhost:8080";
 
-// Right Side Media Component - Only Images and GIFs
 const LoginMedia = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
-
   const mediaItems = [
     {
       type: 'gif',
@@ -129,7 +127,7 @@ export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [focusedField, setFocusedField] = useState(null);
-
+const { darkMode } = useTheme();
   // const { setLogIn, setProfile } = useAuth();
   const navigate = useNavigate();
 
@@ -179,16 +177,21 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-pink-50 via-white to-orange-50 p-4">
-      
+<div
+  className={`min-h-screen flex items-center justify-center p-4 ${
+    darkMode
+      ? "bg-gray-900"
+      : "bg-gradient-to-br from-pink-50 via-white to-orange-50"
+  }`}
+>      
       {/* Main Container - Two Column Layout */}
       <div className="w-full max-w-5xl">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="bg-white rounded-2xl shadow-2xl overflow-hidden"
-        >
+          className={`rounded-2xl shadow-2xl overflow-hidden ${ darkMode ? "bg-gray-800" : "bg-white"
+}`}        >
           <div className="flex flex-col lg:flex-row">
             
             {/* Left Side - Login Form */}
@@ -206,7 +209,9 @@ export default function Login() {
                 >
                   <LogIn className="w-10 h-10 text-white" />
                 </motion.div>
-                <h2 className="text-3xl font-bold text-gray-800">Welcome Back! 👋</h2>
+              <h2 className={`text-3xl font-bold ${  darkMode ? "text-white" : "text-gray-800"
+  }`}
+>                Welcome Back! 👋</h2>
                 <p className="text-gray-500 text-sm mt-2">Login to continue shopping</p>
               </div>
 
@@ -221,8 +226,9 @@ export default function Login() {
                     transition={{ delay: 0.1 }}
                     className="space-y-1"
                   >
-                    <label className="block text-sm font-semibold text-gray-700">
-                      Email Address
+             <label  className={`block text-sm font-semibold ${  darkMode ? "text-white" : "text-gray-700"
+  }`}
+>                      Email Address
                     </label>
                     <div className="relative group">
                       <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 group-focus-within:text-pink-500 transition-colors" />
@@ -232,11 +238,17 @@ export default function Login() {
                         onFocus={() => setFocusedField("email")}
                         onBlur={() => setFocusedField(null)}
                         placeholder="hello@example.com"
-                        className={`w-full pl-11 pr-4 py-3 bg-gray-50 border-2 rounded-xl text-gray-800 placeholder-gray-400 focus:outline-none focus:bg-white transition-all duration-200
-                          ${focusedField === "email" 
-                            ? 'border-pink-500 shadow-md' 
-                            : 'border-gray-200 hover:border-gray-300'
-                          }`}
+                       className={`w-full pl-11 pr-4 py-3 border-2 rounded-xl transition-all duration-200
+                      ${ darkMode
+    ? "bg-gray-700 text-white placeholder-gray-400"
+    : "bg-gray-50 text-gray-800 placeholder-gray-400"
+}
+${
+  focusedField === "email"
+    ? "border-pink-500 shadow-md"
+    : "border-gray-200"
+}`}
+
                       />
                     </div>
                     {formik.touched.email && formik.errors.email && (
@@ -257,8 +269,9 @@ export default function Login() {
                     transition={{ delay: 0.2 }}
                     className="space-y-1"
                   >
-                    <label className="block text-sm font-semibold text-gray-700">
-                      Password
+                <label className={`block text-sm font-semibold ${ darkMode ? "text-white" : "text-gray-700"
+  }`}
+>                      Password
                     </label>
                     <div className="relative group">
                       <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 group-focus-within:text-pink-500 transition-colors" />
@@ -268,11 +281,17 @@ export default function Login() {
                         onFocus={() => setFocusedField("password")}
                         onBlur={() => setFocusedField(null)}
                         placeholder="Enter your password"
-                        className={`w-full pl-11 pr-12 py-3 bg-gray-50 border-2 rounded-xl text-gray-800 placeholder-gray-400 focus:outline-none focus:bg-white transition-all duration-200
-                          ${focusedField === "password" 
-                            ? 'border-pink-500 shadow-md' 
-                            : 'border-gray-200 hover:border-gray-300'
-                          }`}
+                       className={`w-full pl-11 pr-12 py-3 border-2 rounded-xl transition-all duration-200
+${
+  darkMode
+    ? "bg-gray-700 text-white placeholder-gray-400"
+    : "bg-gray-50 text-gray-800 placeholder-gray-400"
+}
+${
+  focusedField === "password"
+    ? "border-pink-500 shadow-md"
+    : "border-gray-200"
+}`}
                       />
                       <button
                         type="button"
@@ -306,8 +325,11 @@ export default function Login() {
                         onChange={() => setShowPassword(!showPassword)}
                         className="w-4 h-4 rounded border-gray-300 text-pink-500 focus:ring-pink-500 cursor-pointer"
                       />
-                      <span className="text-gray-600 group-hover:text-gray-800 transition">
-                        Show password
+<span
+  className={`${
+    darkMode ? "text-gray-300" : "text-gray-600"
+  }`}
+>                        Show password
                       </span>
                     </label>
 
@@ -345,11 +367,21 @@ export default function Login() {
                   {/* Divider */}
                   <div className="relative my-6">
                     <div className="absolute inset-0 flex items-center">
-                      <div className="w-full border-t border-gray-200"></div>
-                    </div>
+<div
+  className={`w-full border-t ${
+    darkMode ? "border-gray-600" : "border-gray-200"
+  }`}
+></div>                    </div>
                     <div className="relative flex justify-center text-sm">
-                      <span className="px-4 bg-white text-gray-500">Or continue with</span>
-                    </div>
+<span
+  className={`px-4 ${
+    darkMode
+      ? "bg-gray-800 text-gray-400"
+      : "bg-white text-gray-500"
+  }`}
+>
+  Or continue with
+</span>                    </div>
                   </div>
 
                   {/* Google Login Button */}
@@ -358,15 +390,22 @@ export default function Login() {
                     onClick={handleGoogleLogin}
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
-                    className="w-full bg-white border-2 border-gray-200 text-gray-700 py-3 rounded-xl font-semibold hover:bg-gray-50 hover:border-pink-200 transition-all flex items-center justify-center gap-3 group"
-                  >
+className={`w-full border-2 py-3 rounded-xl font-semibold transition-all flex items-center justify-center gap-3
+${
+  darkMode
+    ? "bg-gray-700 border-gray-600 text-white hover:bg-gray-600"
+    : "bg-white border-gray-200 text-gray-700 hover:bg-gray-50"
+}`}                  >
                     <GoogleIcon className="w-5 h-5 group-hover:scale-110 transition-transform" />
                     Continue with Google
                   </motion.button>
 
                   {/* Signup Link */}
-                  <p className="text-center text-gray-600 text-sm mt-6">
-                    Don't have an account?{" "}
+<p
+  className={`text-center text-sm mt-6 ${
+    darkMode ? "text-gray-300" : "text-gray-600"
+  }`}
+>                    Don't have an account?{" "}
                     <Link to="/signup" className="text-pink-600 hover:text-pink-700 font-semibold transition hover:underline">
                       Create Account
                     </Link>
@@ -376,8 +415,13 @@ export default function Login() {
             </div>
 
             {/* Right Side - Only Images/GIFs */}
-            <div className="lg:w-1/2 bg-gradient-to-br from-pink-50 to-orange-50">
-              <LoginMedia />
+<div
+  className={`lg:w-1/2 ${
+    darkMode
+      ? "bg-gray-900"
+      : "bg-gradient-to-br from-pink-50 to-orange-50"
+  }`}
+>              <LoginMedia />
             </div>
           </div>
         </motion.div>

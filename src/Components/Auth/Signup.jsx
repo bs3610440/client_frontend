@@ -6,7 +6,7 @@ import axios from 'axios';
 import { validationSignSchema } from '../Validation/AllValidation.jsx';
 import { LocalUrl } from '../GlobalUrl';
 import { showErrorToast, showSuccessToast } from '../Notification/ToastNofication';
-// import {useTheme} from "../context/Themecontext.jsx"
+ import {useTheme} from "../context/Themecontext.jsx"
 import { 
   User, 
   Mail, 
@@ -208,6 +208,7 @@ const Signup = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState('');
   const [focusedField, setFocusedField] = useState(null);
+  const { darkMode } = useTheme();
 
   const navigate = useNavigate();
 
@@ -289,19 +290,30 @@ const Signup = () => {
   ];
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-pink-100 via-white to-orange-100 p-4">
-      <div className="w-full max-w-5xl">
+<div
+  className={`min-h-screen flex items-center justify-center p-4 ${
+    darkMode
+      ? "bg-gray-900"
+      : "bg-gradient-to-br from-pink-100 via-white to-orange-100"
+  }`}
+>      <div className="w-full max-w-5xl">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="bg-white rounded-2xl shadow-2xl overflow-hidden"
-        >
+className={`rounded-2xl shadow-2xl overflow-hidden ${
+  darkMode ? "bg-gray-800" : "bg-white"
+}`}        >
           <div className="flex flex-col lg:flex-row">
             
             {/* Left Side - Shopping Media Section */}
-            <div className="lg:w-1/2 bg-gradient-to-br from-pink-50 to-orange-50 p-6 flex items-center justify-center">
-              <ShoppingMedia />
+<div
+  className={`lg:w-1/2 p-6 flex items-center justify-center ${
+    darkMode
+      ? "bg-gray-900"
+      : "bg-gradient-to-br from-pink-50 to-orange-50"
+  }`}
+>              <ShoppingMedia />
             </div>
             
             {/* Right Side - Signup Form Section */}
@@ -316,8 +328,16 @@ const Signup = () => {
                 >
                   <ShoppingBag className="w-8 h-8 text-white" />
                 </motion.div>
-                <h2 className="text-2xl font-bold text-gray-800">Create Account</h2>
-                <p className="text-gray-500 text-sm mt-1">Join us and start shopping</p>
+<h2
+  className={`text-2xl font-bold ${
+    darkMode ? "text-white" : "text-gray-800"
+  }`}
+>                  Create Account</h2>
+<p
+  className={`text-sm mt-1 ${
+    darkMode ? "text-gray-300" : "text-gray-500"
+  }`}
+>                  Join us and start shopping</p>
               </div>
 
               {/* Form Body */}
@@ -344,8 +364,11 @@ const Signup = () => {
                       transition={{ delay: index * 0.1 }}
                       className="space-y-1"
                     >
-                      <label className="block text-sm font-medium text-gray-700">
-                        {field.label}
+<label
+  className={`block text-sm font-medium ${
+    darkMode ? "text-gray-200" : "text-gray-700"
+  }`}
+>                        {field.label}
                       </label>
 
                       {field.type === 'select' ? (
@@ -355,8 +378,12 @@ const Signup = () => {
                             value={formik.values[field.id] || ""}
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
-                            className="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-gray-800 focus:outline-none focus:border-pink-500 focus:bg-white transition-all duration-200 appearance-none cursor-pointer"
-                          >
+className={`w-full pl-10 pr-4 py-2.5 border rounded-xl appearance-none cursor-pointer
+${
+  darkMode
+    ? "bg-gray-700 text-white border-gray-600"
+    : "bg-gray-50 text-gray-800 border-gray-200"
+}`}                          >
                             {field.options.map((opt) => (
                               <option key={opt.value} value={opt.value}>
                                 {opt.label}
@@ -377,11 +404,17 @@ const Signup = () => {
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
                             onFocus={() => setFocusedField(field.id)}
-                            className={`w-full pl-10 pr-10 py-2.5 bg-gray-50 border rounded-xl text-gray-800 placeholder-gray-400 focus:outline-none focus:bg-white transition-all duration-200
-                              ${focusedField === field.id 
-                                ? 'border-pink-500 shadow-md' 
-                                : 'border-gray-200 hover:border-gray-300'
-                              }`}
+                            className={`w-full pl-10 pr-10 py-2.5 border rounded-xl placeholder-gray-400 transition-all duration-200
+${
+  darkMode
+    ? "bg-gray-700 text-white border-gray-600"
+    : "bg-gray-50 text-gray-800 border-gray-200"
+}
+${
+  focusedField === field.id
+    ? "border-pink-500 shadow-md"
+    : ""
+}`}
                           />
                           
                           {field.showToggle && (
@@ -437,8 +470,11 @@ const Signup = () => {
                           />
                         ))}
                       </div>
-                      <p className="text-xs text-gray-500 mt-1">
-                        {formik.values.password.length < 6
+<p
+  className={`text-xs mt-1 ${
+    darkMode ? "text-gray-300" : "text-gray-500"
+  }`}
+>                        {formik.values.password.length < 6
                           ? '🔒 Weak password'
                           : formik.values.password.length < 10
                           ? '👍 Medium password'
@@ -476,8 +512,15 @@ const Signup = () => {
                       <div className="w-full border-t border-gray-200"></div>
                     </div>
                     <div className="relative flex justify-center text-sm">
-                      <span className="px-4 bg-white text-gray-500">Or</span>
-                    </div>
+<span
+  className={`px-4 ${
+    darkMode
+      ? "bg-gray-800 text-gray-300"
+      : "bg-white text-gray-500"
+  }`}
+>
+  Or
+</span>                    </div>
                   </div>
 
                   {/* Google Sign Up */}
@@ -486,23 +529,33 @@ const Signup = () => {
                     onClick={handlegoglesignup}
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
-                    className="w-full bg-white border border-gray-200 text-gray-700 py-2.5 rounded-xl font-medium hover:bg-gray-50 hover:border-pink-200 transition-all flex items-center justify-center gap-3"
-                  >
+className={`w-full py-2.5 rounded-xl font-medium transition-all flex items-center justify-center gap-3
+${
+  darkMode
+    ? "bg-gray-700 border border-gray-600 text-white"
+    : "bg-white border border-gray-200 text-gray-700"
+}`}                  >
                     <GoogleIcon className="w-5 h-5" />
                     Continue with Google
                   </motion.button>
 
                   {/* Login Link */}
-                  <p className="text-center text-gray-600 text-sm mt-5">
-                    Already have an account?{" "}
+<p
+  className={`text-center text-sm mt-5 ${
+    darkMode ? "text-gray-300" : "text-gray-600"
+  }`}
+>                    Already have an account?{" "}
                     <Link to="/login" className="text-pink-600 hover:text-pink-700 font-semibold">
                       Login
                     </Link>
                   </p>
 
                   {/* Terms */}
-                  <p className="text-center text-xs text-gray-400">
-                    By signing up, you agree to our{" "}
+<p
+  className={`text-center text-xs ${
+    darkMode ? "text-gray-400" : "text-gray-400"
+  }`}
+>                    By signing up, you agree to our{" "}
                     <Link to="/terms" className="text-pink-500 hover:underline">Terms</Link>
                     {" "}&{" "}
                     <Link to="/privacy" className="text-pink-500 hover:underline">Privacy Policy</Link>
